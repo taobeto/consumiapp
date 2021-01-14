@@ -6,33 +6,53 @@
         </div>
         <div class="card-body">
             <button class="btn btn-outline-success" @click="administrar('crear')">Crear</button>
-            <button class="btn btn-outline-primary" @click="administrar('listar')">Listar</button>
-            <div class="row">
+            <div class="row justify-content-center">
                 <div class="col-8 " v-show="crear">
                     <form class="mt-3">
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Direccion</label>
-                            <input type="text" class="form-control"  v-model="electrolinera.direccion" aria-describedby="emailHelp">
+                            <label for="exampleInputEmail1">Nombre</label>
+                            <input type="text" class="form-control"  v-model="electrolinera.nombre" aria-describedby="emailHelp">
                             <small id="emailHelp" class="form-text text-muted">dirección física del la electrolinera.</small>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">cordenadas</label>
-                            <input type="text" class="form-control"  v-model="electrolinera.cordenadas" aria-describedby="emailHelp">
-                            <small id="emailHelp" class="form-text text-muted">Coodenadas ejemplo: 5.0686966,-75.5187484.</small>
+                            <label for="exampleInputEmail1">Coordenadas geográficas</label>
+                            <input type="text" class="form-control"  v-model="electrolinera.coordenadas" aria-describedby="emailHelp">
+                            <small id="emailHelp" class="form-text text-muted">Coordenadas ejemplo: 5.0686966,-75.5187484.</small>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Capacidad</label>
                             <input type="text" class="form-control"  v-model="electrolinera.capacidad" aria-describedby="emailHelp">
                             <small id="emailHelp" class="form-text text-muted">dirección física del la electrolinera.</small>
                         </div>
-                        <button type="submit" class="btn btn-outline-primary btn-block">Enviar</button>
+                        <button @click="crearElectrolinera()" class="btn btn-outline-primary btn-block">Enviar</button>
                     </form>
                 </div>
-                <div class="col-12" v-show="ver">
+                <div class="col-12">
                     <table class="table mt-3">
                         <thead>
-                            <th>nombre</th>
+                            <th class="text-center">Id</th>
+                            <th class="text-center">Nombre</th>
+                            <th class="text-center">Coordenadas</th>
+                            <th class="text-center">Capacidad vehículos</th>
+                            <th class="text-center">Estado</th>
+                            <th class="text-center">Editar</th>
+                            <th class="text-center">Eliminar</th>
                         </thead>
+                        <tbody>
+                            <tr v-for="(electrolinera, index) in electrolineras" :key="index">
+                                <td class="text-center">{{electrolinera.id}}</td>
+                                <td class="text-center">{{electrolinera.nombre}}</td>
+                                <td class="text-center">{{electrolinera.coordenadas}}</td>
+                                <td class="text-center">{{electrolinera.capacidad}}</td>
+                                <td class="text-center">{{electrolinera.estado_id}}</td>
+                                <td class="text-center">
+                                    <button class="btn btn-outline-info">Editar</button>
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-outline-danger">Eliminar</button>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -49,11 +69,22 @@ export default {
         return{
             crear: false,
             ver: false,
+            electrolineras: [],
             electrolinera:{
-                direccion: '',
-                ip: '',
+                nombre: '',
+                cooredanasa: '',
+                capacidad: '',
             }
         }
+    },
+    mounted(){
+        axios.get('/listar-electrolineras')
+        .then( resp => {
+            this.ver = true
+            if( resp.status === 200){
+                this.electrolineras = resp.data
+            }
+        })
     },
     methods:{
         administrar(data){
@@ -62,9 +93,20 @@ export default {
                 this.ver = false
             }else{
                 this.crear = false
-                this.ver = true 
+                this.ver = true
+                this.listar()
             }
-        }
+        },
+        crearElectrolinera(){
+            axios.post('/crear-electrolinera', this.electrolinera)
+            .then( resp => {
+                if( resp.status === 200){
+                    alert('electrolinera creada')
+                    this.crear = false
+                    this.listar()
+                }
+            })
+        },
     }
 }
 </script>

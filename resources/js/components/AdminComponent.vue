@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <nav class=" col-md-2 d-md-block d-md-block bg-light sidebar">
+      <nav class=" col-md-2 d-none d-md-block d-md-block bg-light sidebar">
         <div class="sidebar-sticky">
           <ul class="nav">
             <li class="nav-item col-md-12">
@@ -47,9 +47,8 @@ export default {
     data(){
       return{
         menus:[
-          {'nombre':'Inicio', 'ruta':'/' },
           {'nombre':'Electrolineras', 'ruta':'/electrolineras' },
-          {'nombre':'Personal', 'ruta':'/personal' },
+          // {'nombre':'Personal', 'ruta':'/personal' },
           {'nombre':'Mantenimientos', 'ruta':'/mantenimientos' },
           {'nombre':'Estadisticas', 'ruta':'/estadisticas' },
         ]
@@ -59,5 +58,7 @@ export default {
 </script>
 
 <style>
-
+  .router-link-active, a{
+    color:black !important
+  }
 </style>
